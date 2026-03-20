@@ -1,0 +1,19 @@
+<!-- ============================================================
+     views/error.ejs – Error Page
+     ============================================================ -->
+<div class="container py-5 text-center">
+  <div style="font-family:var(--font-display);font-size:7rem;font-weight:900;line-height:1;
+              background:linear-gradient(135deg,var(--neon-pink),var(--neon-purple));
+              -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+              filter:drop-shadow(0 0 20px rgba(255,0,110,0.4));">
+    <%= code || '😵' %>
+  </div>
+  <h1 style="font-family:var(--font-display);color:var(--neon-cyan);letter-spacing:3px;margin:1rem 0 0.5rem;">
+    <%= title %>
+  </h1>
+  <p style="color:var(--text-muted);max-width:400px;margin:0 auto 2rem;"><%= message %></p>
+  <a href="/" class="btn-neon btn btn-lg">
+    <span><i class="bi bi-house me-2"></i>Back to Home</span>
+  </a>
+</div>
+

@@ -1,0 +1,115 @@
+<!-- ============================================================
+     views/partials/navbar.ejs
+     ============================================================ -->
+<nav class="neon-navbar navbar navbar-expand-lg">
+  <div class="container">
+
+    <!-- Brand Logo -->
+    <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+      <img src="/images/NEON TECH LOGO.png" alt="NEON TECH" height="38"
+           style="filter:drop-shadow(0 0 8px rgba(0,245,255,0.6));">
+      <span>NEON TECH</span>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navMain" aria-controls="navMain" aria-expanded="false">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navMain">
+
+      <!-- Center: Search Bar -->
+      <form class="d-flex mx-auto my-2 my-lg-0" action="/" method="GET" style="width:100%;max-width:420px;">
+        <div class="input-group">
+          <input type="text" name="search" class="neon-search form-control"
+                 placeholder="<%= lang === 'ar' ? 'ابحث عن منتج...' : 'Search products...' %>"
+                 value="<%= typeof search !== 'undefined' ? search : '' %>">
+          <button class="btn-neon btn" type="submit" style="border-radius:0 8px 8px 0;">
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+      </form>
+
+      <!-- Right: Nav Links -->
+      <ul class="navbar-nav align-items-center gap-1 ms-auto">
+
+        <!-- Language Toggle -->
+        <li class="nav-item">
+          <% if (lang === 'en') { %>
+            <a href="/lang/ar" class="nav-link" title="عربي" style="color:var(--neon-purple)!important;">
+              🌐 <span class="d-none d-lg-inline">عربي</span>
+            </a>
+          <% } else { %>
+            <a href="/lang/en" class="nav-link" title="English" style="color:var(--neon-cyan)!important;">
+              🌐 <span class="d-none d-lg-inline">EN</span>
+            </a>
+          <% } %>
+        </li>
+
+        <!-- Wishlist (logged in only) -->
+        <% if (user) { %>
+          <li class="nav-item">
+            <a href="/wishlist" class="nav-link" title="Wishlist">
+              <i class="bi bi-heart" style="font-size:1.1rem;"></i>
+            </a>
+          </li>
+        <% } %>
+
+        <!-- Cart -->
+        <li class="nav-item">
+          <a href="/cart" class="nav-link position-relative" title="Cart">
+            <i class="bi bi-bag" style="font-size:1.1rem;"></i>
+            <% if (cartCount > 0) { %>
+              <span class="cart-badge"><%= cartCount %></span>
+            <% } %>
+          </a>
+        </li>
+
+        <!-- Auth Links -->
+        <% if (user) { %>
+          <li class="nav-item">
+            <a href="/orders" class="nav-link">
+              <i class="bi bi-receipt me-1"></i>
+              <span class="d-none d-lg-inline"><%= lang === 'ar' ? 'طلباتي' : 'Orders' %></span>
+            </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+              <i class="bi bi-person-circle me-1"></i>
+              <span class="d-none d-lg-inline"><%= user.name.split(' ')[0] %></span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end"
+                style="background:var(--bg-card);border:1px solid var(--border-neon);">
+              <li><span class="dropdown-item-text" style="color:var(--text-muted);font-size:0.8rem;">
+                <%= user.email %></span></li>
+              <li><hr class="dropdown-divider" style="border-color:var(--border-neon);"></li>
+              <li><a class="dropdown-item" href="/orders"
+                     style="color:var(--text-primary);">
+                  <i class="bi bi-box-seam me-2"></i><%= lang === 'ar' ? 'طلباتي' : 'My Orders' %></a></li>
+              <li><a class="dropdown-item" href="/wishlist"
+                     style="color:var(--text-primary);">
+                  <i class="bi bi-heart me-2"></i><%= lang === 'ar' ? 'المفضلة' : 'Wishlist' %></a></li>
+              <li><hr class="dropdown-divider" style="border-color:var(--border-neon);"></li>
+              <li><a class="dropdown-item" href="/auth/logout"
+                     style="color:var(--neon-pink);">
+                  <i class="bi bi-box-arrow-right me-2"></i><%= lang === 'ar' ? 'تسجيل الخروج' : 'Logout' %></a></li>
+            </ul>
+          </li>
+        <% } else { %>
+          <li class="nav-item">
+            <a href="/auth/login" class="nav-link">
+              <i class="bi bi-box-arrow-in-right me-1"></i>
+              <span class="d-none d-lg-inline"><%= lang === 'ar' ? 'دخول' : 'Login' %></span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/auth/register" class="btn-neon btn ms-1 py-1">
+              <span><%= lang === 'ar' ? 'تسجيل' : 'Register' %></span>
+            </a>
+          </li>
+        <% } %>
+
+      </ul>
+    </div>
+  </div>
+</nav>

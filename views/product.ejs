@@ -1,0 +1,232 @@
+<!-- ============================================================
+     views/product.ejs – Product Detail Page
+     ============================================================ -->
+<div class="container py-5">
+
+  <!-- Breadcrumb -->
+  <nav class="mb-4" style="font-family:var(--font-ui);font-size:0.85rem;">
+    <a href="/" style="color:var(--text-muted);">
+      <%= lang === 'ar' ? 'الرئيسية' : 'Home' %></a>
+    <span style="color:var(--text-muted);margin:0 8px;">/</span>
+    <a href="/?category=<%= encodeURIComponent(product.category) %>"
+       style="color:var(--text-muted);"><%= product.category %></a>
+    <span style="color:var(--text-muted);margin:0 8px;">/</span>
+    <span style="color:var(--neon-cyan);">
+      <%= lang === 'ar' ? product.name_ar : product.name_en %>
+    </span>
+  </nav>
+
+  <div class="row g-5 align-items-start">
+
+    <!-- Product Image -->
+    <div class="col-md-6">
+      <div class="neon-panel p-0 overflow-hidden" style="border-radius:var(--radius);">
+        <img src="<%= product.image_path %>"
+             alt="<%= lang === 'ar' ? product.name_ar : product.name_en %>"
+             class="img-fluid w-100"
+             style="max-height:480px;object-fit:cover;display:block;">
+      </div>
+    </div>
+
+    <!-- Product Info -->
+    <div class="col-md-6">
+      <p class="product-category" style="font-size:0.85rem;"><%= product.category %></p>
+      <h1 class="section-title mb-3">
+        <%= lang === 'ar' ? product.name_ar : product.name_en %>
+      </h1>
+
+      <!-- Rating -->
+      <div class="d-flex align-items-center gap-2 mb-3">
+        <div class="product-rating">
+          <% const r = Math.round(product.rating); %>
+          <% for(let i=1; i<=5; i++) { %>
+            <i class="bi bi-star<%= i<=r ? '-fill' : '' %>"></i>
+          <% } %>
+        </div>
+        <span style="color:var(--text-muted);font-size:0.85rem;">
+          <%= Number(product.rating).toFixed(1) %> / 5.0 ・ <%= reviews.length %> <%= lang === 'ar' ? 'مراجعة' : 'reviews' %>
+        </span>
+      </div>
+
+      <div class="product-price mb-4" style="font-size:2.5rem;">
+        $<%= Number(product.price).toFixed(2) %>
+      </div>
+
+      <p style="color:var(--text-muted);line-height:1.9;margin-bottom:1.5rem;">
+        <%= lang === 'ar' ? product.desc_ar : product.desc_en %>
+      </p>
+
+      <!-- Stock -->
+      <p style="font-family:var(--font-ui);font-size:0.9rem;margin-bottom:1.5rem;">
+        <% if (product.stock > 10) { %>
+          <span style="color:var(--neon-green);"><i class="bi bi-check-circle-fill me-1"></i>
+            <%= lang === 'ar' ? 'متوفر في المخزون' : 'In Stock' %></span>
+        <% } else if (product.stock > 0) { %>
+          <span style="color:#ffae00;"><i class="bi bi-exclamation-triangle-fill me-1"></i>
+            <%= lang === 'ar' ? `متبقي ${product.stock} فقط` : `Only ${product.stock} left!` %></span>
+        <% } else { %>
+          <span style="color:var(--neon-pink);"><i class="bi bi-x-circle-fill me-1"></i>
+            <%= lang === 'ar' ? 'نفد المخزون' : 'Out of Stock' %></span>
+        <% } %>
+      </p>
+
+      <!-- Add to Cart -->
+      <% if (product.stock > 0) { %>
+        <form action="/cart/add" method="POST" class="d-flex gap-3 align-items-center mb-3">
+          <input type="hidden" name="product_id" value="<%= product.id %>">
+          <div class="qty-group d-flex align-items-center gap-2"
+               style="background:var(--bg-card);border:1px solid var(--border-neon);border-radius:8px;padding:4px 10px;">
+            <button type="button" class="qty-btn btn btn-sm p-0" data-action="dec"
+                    style="color:var(--neon-cyan);background:none;border:none;font-size:1.2rem;">−</button>
+            <input type="number" name="quantity" class="qty-input" value="1" min="1" max="<%= product.stock %>">
+            <button type="button" class="qty-btn btn btn-sm p-0" data-action="inc"
+                    style="color:var(--neon-cyan);background:none;border:none;font-size:1.2rem;">+</button>
+          </div>
+          <button type="submit" class="btn-neon btn btn-lg flex-fill"
+            <% if (!user) { %>
+              onclick="event.preventDefault();window.location='/auth/login';"
+            <% } %>>
+            <span><i class="bi bi-bag-plus me-2"></i>
+              <%= lang === 'ar' ? 'أضف إلى السلة' : 'Add to Cart' %>
+            </span>
+          </button>
+        </form>
+      <% } %>
+
+      <!-- Wishlist Toggle -->
+      <form action="/wishlist/toggle" method="POST" class="mb-4">
+        <input type="hidden" name="product_id" value="<%= product.id %>">
+        <button type="submit" class="btn-neon btn btn-neon-purple w-100"
+          <% if (!user) { %>
+            onclick="event.preventDefault();window.location='/auth/login';"
+          <% } %>>
+          <span>
+            <i class="bi bi-heart<%= inWishlist ? '-fill' : '' %> me-2"></i>
+            <%= inWishlist
+              ? (lang === 'ar' ? 'إزالة من المفضلة' : 'Remove from Wishlist')
+              : (lang === 'ar' ? 'أضف للمفضلة'      : 'Add to Wishlist') %>
+          </span>
+        </button>
+      </form>
+
+      <!-- Trust Badges -->
+      <div class="d-flex gap-4 flex-wrap" style="font-family:var(--font-ui);font-size:0.8rem;color:var(--text-muted);">
+        <span><i class="bi bi-shield-check me-1" style="color:var(--neon-green);"></i>Secure Payment</span>
+        <span><i class="bi bi-truck    me-1" style="color:var(--neon-cyan);"></i>Free Shipping</span>
+        <span><i class="bi bi-arrow-repeat me-1" style="color:var(--neon-purple);"></i>30-Day Returns</span>
+      </div>
+    </div>
+  </div>
+
+  <hr class="neon-divider my-5">
+
+  <!-- Reviews Section -->
+  <h2 class="section-title mb-4">
+    <span class="accent"><%= lang === 'ar' ? 'تقييمات' : 'Reviews' %></span>
+    & <%= lang === 'ar' ? 'آراء العملاء' : 'Ratings' %>
+  </h2>
+
+  <!-- Submit Review (logged in) -->
+  <% if (user) { %>
+    <div class="neon-panel mb-5" style="max-width:600px;">
+      <div class="neon-panel-header">
+        <i class="bi bi-pencil-square me-2"></i>
+        <%= lang === 'ar' ? 'اكتب مراجعتك' : 'Write a Review' %>
+      </div>
+      <form action="/reviews" method="POST">
+        <input type="hidden" name="product_id" value="<%= product.id %>">
+        <!-- Rating Stars -->
+        <div class="star-rating flex-row-reverse justify-content-end mb-3" id="starRating">
+          <% for(let i=5; i>=1; i--) { %>
+            <input type="radio" name="rating" id="star<%= i %>" value="<%= i %>">
+            <label for="star<%= i %>">★</label>
+          <% } %>
+        </div>
+        <div class="mb-3">
+          <label class="form-label"><%= lang === 'ar' ? 'تعليقك' : 'Your Comment' %></label>
+          <textarea class="form-control" name="comment" rows="3" maxlength="1000"
+            placeholder="<%= lang === 'ar' ? 'شارك تجربتك...' : 'Share your experience...' %>"></textarea>
+        </div>
+        <button type="submit" class="btn-neon btn">
+          <span><i class="bi bi-send me-2"></i><%= lang === 'ar' ? 'إرسال' : 'Submit Review' %></span>
+        </button>
+      </form>
+    </div>
+  <% } else { %>
+    <div class="alert-neon error mb-4" style="max-width:400px;">
+      <i class="bi bi-lock me-2"></i>
+      <a href="/auth/login" style="color:inherit;"><%= lang === 'ar' ? 'سجل دخولك لكتابة مراجعة' : 'Log in to write a review' %></a>
+    </div>
+  <% } %>
+
+  <!-- Reviews List -->
+  <% if (reviews.length === 0) { %>
+    <p style="color:var(--text-muted);">
+      <%= lang === 'ar' ? 'لا توجد مراجعات بعد. كن أول من يقيّم!' : 'No reviews yet. Be the first!' %>
+    </p>
+  <% } else { %>
+    <div class="d-flex flex-column gap-3">
+      <% reviews.forEach(rv => { %>
+        <div class="neon-panel" style="padding:1.25rem;">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <strong style="color:var(--neon-cyan);">
+                <i class="bi bi-person-circle me-2"></i><%= rv.user_name %>
+              </strong>
+              <div class="product-rating mt-1">
+                <% for(let i=1;i<=5;i++) { %>
+                  <i class="bi bi-star<%= i<=rv.rating ? '-fill' : '' %>"></i>
+                <% } %>
+              </div>
+            </div>
+            <span style="color:var(--text-muted);font-size:0.8rem;">
+              <%= new Date(rv.created_at).toLocaleDateString(lang === 'ar' ? 'ar-SA' : 'en-US') %>
+            </span>
+          </div>
+          <% if (rv.comment) { %>
+            <p class="mt-2 mb-0" style="color:var(--text-muted);font-size:0.9rem;"><%= rv.comment %></p>
+          <% } %>
+          <% if (user && user.id === rv.user_id) { %>
+            <form action="/reviews/delete" method="POST" class="mt-2">
+              <input type="hidden" name="review_id"  value="<%= rv.id %>">
+              <input type="hidden" name="product_id" value="<%= product.id %>">
+              <button type="submit" class="btn btn-sm" data-confirm="Delete your review?"
+                      style="color:var(--neon-pink);background:none;border:none;font-size:0.8rem;padding:0;">
+                <i class="bi bi-trash me-1"></i><%= lang === 'ar' ? 'حذف' : 'Delete' %>
+              </button>
+            </form>
+          <% } %>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+
+  <!-- Related Products -->
+  <% if (related.length > 0) { %>
+    <hr class="neon-divider my-5">
+    <h2 class="section-title mb-4">
+      <%= lang === 'ar' ? 'منتجات' : 'Related' %> <span class="accent"><%= lang === 'ar' ? 'مشابهة' : 'Products' %></span>
+    </h2>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+      <% related.forEach(rp => { %>
+        <div class="col">
+          <div class="product-card card border-0 h-100">
+            <a href="/products/<%= rp.id %>">
+              <img src="<%= rp.image_path %>" class="card-img-top"
+                   alt="<%= lang === 'ar' ? rp.name_ar : rp.name_en %>"
+                   style="height:180px;object-fit:cover;">
+            </a>
+            <div class="card-body">
+              <a href="/products/<%= rp.id %>" class="product-title d-block text-decoration-none">
+                <%= lang === 'ar' ? rp.name_ar : rp.name_en %>
+              </a>
+              <span class="product-price" style="font-size:1.1rem;">$<%= Number(rp.price).toFixed(2) %></span>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+
+</div>
+

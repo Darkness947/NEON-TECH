@@ -1,0 +1,91 @@
+<!-- ============================================================
+     views/checkout.ejs – Checkout Page
+     ============================================================ -->
+<div class="container py-5">
+  <h1 class="section-title mb-4">
+    <span class="accent"><i class="bi bi-credit-card me-2"></i></span>
+    <%= lang === 'ar' ? 'الدفع' : 'Checkout' %>
+  </h1>
+
+  <div class="row g-4">
+
+    <!-- Order Summary (left) -->
+    <div class="col-lg-7">
+      <div class="neon-panel">
+        <div class="neon-panel-header">
+          <i class="bi bi-bag-check me-2"></i>
+          <%= lang === 'ar' ? 'ملخص طلبك' : 'Your Order' %>
+        </div>
+        <% items.forEach(item => { %>
+          <div class="d-flex align-items-center gap-3 mb-3 pb-3"
+               style="border-bottom:1px solid var(--border-neon);">
+            <img src="<%= item.image_path %>"
+                 alt="<%= lang === 'ar' ? item.name_ar : item.name_en %>"
+                 style="width:60px;height:55px;object-fit:cover;border-radius:8px;
+                        border:1px solid var(--border-neon);">
+            <div class="flex-fill">
+              <p class="mb-0" style="font-family:var(--font-ui);font-weight:600;">
+                <%= lang === 'ar' ? item.name_ar : item.name_en %>
+              </p>
+              <span style="color:var(--text-muted);font-size:0.85rem;">Qty: <%= item.quantity %></span>
+            </div>
+            <span class="product-price" style="font-size:1rem;">
+              $<%= (item.price * item.quantity).toFixed(2) %>
+            </span>
+          </div>
+        <% }) %>
+
+        <div class="d-flex justify-content-between align-items-center mt-2">
+          <span style="font-family:var(--font-display);font-size:1rem;color:var(--text-muted);">
+            <%= lang === 'ar' ? 'الإجمالي' : 'Total' %>
+          </span>
+          <span class="product-price" style="font-size:1.8rem;">$<%= subtotal %></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment Panel (right) -->
+    <div class="col-lg-5">
+      <div class="neon-panel">
+        <div class="neon-panel-header">
+          <i class="bi bi-stripe me-2"></i>
+          <%= lang === 'ar' ? 'ادفع بأمان عبر Stripe' : 'Pay Securely via Stripe' %>
+        </div>
+        <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:1.5rem;">
+          <%= lang === 'ar'
+            ? 'ستُوجَّه إلى صفحة دفع آمنة من Stripe. استخدم بطاقة الاختبار 4242 4242 4242 4242.'
+            : 'You will be redirected to a secure Stripe payment page. Use test card: 4242 4242 4242 4242 / Any future date / Any CVC.' %>
+        </p>
+
+        <!-- Test Card Info -->
+        <div class="alert-neon success mb-4">
+          <i class="bi bi-info-circle me-2"></i>
+          <strong>Test Card:</strong> 4242 4242 4242 4242 · Exp: 12/28 · CVC: 123
+        </div>
+
+        <form action="/checkout/stripe" method="POST">
+          <button type="submit" class="btn-neon-filled btn w-100 py-3" style="font-size:1rem;">
+            <i class="bi bi-lock-fill me-2"></i>
+            <%= lang === 'ar'
+              ? `ادفع $${subtotal} الآن`
+              : `Pay $${subtotal} Now` %>
+          </button>
+        </form>
+
+        <div class="d-flex justify-content-center gap-3 mt-3" style="opacity:0.5;">
+          <i class="bi bi-shield-lock-fill" style="color:var(--neon-green);font-size:1.2rem;"></i>
+          <span style="font-size:0.78rem;color:var(--text-muted);align-self:center;">256-bit SSL Encryption</span>
+        </div>
+
+        <a href="/cart" class="d-block text-center mt-3"
+           style="color:var(--text-muted);font-size:0.85rem;text-decoration:none;">
+          <i class="bi bi-arrow-left me-1"></i>
+          <%= lang === 'ar' ? 'العودة للسلة' : 'Back to Cart' %>
+        </a>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+

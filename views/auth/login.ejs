@@ -1,0 +1,71 @@
+<!-- ============================================================
+     views/auth/login.ejs
+     ============================================================ -->
+<div class="container py-5 d-flex justify-content-center">
+  <div class="neon-panel w-100" style="max-width:440px;">
+    <div class="text-center mb-4">
+      <div style="font-family:var(--font-display);font-size:2rem;font-weight:900;
+                  background:linear-gradient(135deg,var(--neon-cyan),var(--neon-purple));
+                  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">
+        ⚡ NEON TECH
+      </div>
+      <h1 class="section-title mt-2" style="font-size:1.2rem;">
+        <span class="accent"><%= lang === 'ar' ? 'تسجيل' : 'SIGN' %></span>
+        <%= lang === 'ar' ? 'الدخول' : 'IN' %>
+      </h1>
+    </div>
+
+    <form action="/auth/login" method="POST" novalidate>
+
+      <div class="mb-3">
+        <label class="form-label" for="email">
+          <i class="bi bi-envelope me-1"></i><%= lang === 'ar' ? 'البريد الإلكتروني' : 'Email Address' %>
+        </label>
+        <input type="email" class="form-control" id="email" name="email"
+               placeholder="<%= lang === 'ar' ? 'بريدك الإلكتروني' : 'you@example.com' %>"
+               autocomplete="email" required>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label" for="password">
+          <i class="bi bi-shield-lock me-1"></i><%= lang === 'ar' ? 'كلمة المرور' : 'Password' %>
+        </label>
+        <div class="input-group">
+          <input type="password" class="form-control" id="password" name="password"
+                 placeholder="<%= lang === 'ar' ? 'كلمة المرور' : '••••••••' %>"
+                 autocomplete="current-password" required>
+          <button type="button" class="btn" id="togglePwd"
+                  style="background:var(--bg-secondary);border:1px solid var(--border-neon);color:var(--text-muted);">
+            <i class="bi bi-eye" id="eyeIcon"></i>
+          </button>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-neon-filled btn w-100 py-2 mb-3">
+        <i class="bi bi-box-arrow-in-right me-2"></i>
+        <%= lang === 'ar' ? 'دخول' : 'Login' %>
+      </button>
+
+      <p class="text-center" style="color:var(--text-muted);font-size:0.9rem;">
+        <%= lang === 'ar' ? 'ليس لديك حساب؟' : "Don't have an account?" %>
+        <a href="/auth/register" style="color:var(--neon-cyan);text-decoration:none;">
+          <%= lang === 'ar' ? 'سجل الآن' : 'Register' %>
+        </a>
+      </p>
+
+    </form>
+  </div>
+</div>
+
+<script>
+  document.getElementById('togglePwd').addEventListener('click', function() {
+    const pwd = document.getElementById('password');
+    const icon = document.getElementById('eyeIcon');
+    if (pwd.type === 'password') {
+      pwd.type = 'text'; icon.className = 'bi bi-eye-slash';
+    } else {
+      pwd.type = 'password'; icon.className = 'bi bi-eye';
+    }
+  });
+</script>
+

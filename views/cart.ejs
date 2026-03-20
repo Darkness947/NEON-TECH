@@ -1,0 +1,149 @@
+<!-- ============================================================
+     views/cart.ejs – Shopping Cart
+     ============================================================ -->
+<div class="container py-5">
+  <h1 class="section-title mb-4">
+    <span class="accent"><i class="bi bi-bag me-2"></i></span>
+    <%= lang === 'ar' ? 'سلة التسوق' : 'Shopping Cart' %>
+  </h1>
+
+  <% if (items.length === 0) { %>
+    <div class="text-center py-5 neon-panel">
+      <i class="bi bi-bag" style="font-size:4rem;color:var(--text-muted);"></i>
+      <h4 class="mt-3" style="color:var(--text-muted);">
+        <%= lang === 'ar' ? 'سلتك فارغة!' : 'Your cart is empty!' %>
+      </h4>
+      <a href="/" class="btn-neon btn mt-3">
+        <span><i class="bi bi-grid me-2"></i><%= lang === 'ar' ? 'تسوق الآن' : 'Shop Now' %></span>
+      </a>
+    </div>
+  <% } else { %>
+    <div class="row g-4">
+
+      <!-- Cart Items Table -->
+      <div class="col-lg-8">
+        <div class="neon-panel p-0 overflow-hidden">
+          <table class="neon-table">
+            <thead>
+              <tr>
+                <th><%= lang === 'ar' ? 'المنتج' : 'Product' %></th>
+                <th class="text-center"><%= lang === 'ar' ? 'الكمية' : 'Qty' %></th>
+                <th class="text-end"><%= lang === 'ar' ? 'السعر' : 'Price' %></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% items.forEach(item => { %>
+                <tr>
+                  <!-- Product Info -->
+                  <td>
+                    <div class="d-flex align-items-center gap-3">
+                      <img src="<%= item.image_path %>"
+                           alt="<%= lang === 'ar' ? item.name_ar : item.name_en %>"
+                           style="width:70px;height:60px;object-fit:cover;border-radius:8px;
+                                  border:1px solid var(--border-neon);">
+                      <div>
+                        <a href="/products/<%= item.product_id %>"
+                           style="color:var(--text-primary);text-decoration:none;font-weight:600;
+                                  font-family:var(--font-ui);">
+                          <%= lang === 'ar' ? item.name_ar : item.name_en %>
+                        </a>
+                        <div class="product-price" style="font-size:0.95rem;">
+                          $<%= Number(item.price).toFixed(2) %>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+
+                  <!-- Quantity Update -->
+                  <td class="text-center">
+                    <form action="/cart/update" method="POST" class="qty-group d-inline-flex align-items-center gap-1">
+                      <input type="hidden" name="cart_id" value="<%= item.cart_id %>">
+                      <button type="button" class="qty-btn btn btn-sm p-0" data-action="dec"
+                              style="color:var(--neon-cyan);background:none;border:none;">−</button>
+                      <input type="number" name="quantity" class="qty-input" value="<%= item.quantity %>"
+                             min="1" max="<%= item.stock %>" onchange="this.form.submit()">
+                      <button type="button" class="qty-btn btn btn-sm p-0" data-action="inc"
+                              style="color:var(--neon-cyan);background:none;border:none;">+</button>
+                    </form>
+                  </td>
+
+                  <!-- Line Total -->
+                  <td class="text-end" style="font-family:var(--font-display);color:var(--neon-cyan);">
+                    $<%= (item.price * item.quantity).toFixed(2) %>
+                  </td>
+
+                  <!-- Remove -->
+                  <td>
+                    <form action="/cart/remove" method="POST">
+                      <input type="hidden" name="cart_id" value="<%= item.cart_id %>">
+                      <button type="submit" class="btn btn-sm p-1"
+                              style="color:var(--neon-pink);background:none;border:none;"
+                              data-confirm="<%= lang === 'ar' ? 'حذف هذا المنتج؟' : 'Remove this item?' %>">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Clear Cart -->
+        <form action="/cart/clear" method="POST" class="mt-3">
+          <button type="submit" class="btn btn-sm" data-confirm="Clear entire cart?"
+                  style="color:var(--neon-pink);background:none;border:none;font-family:var(--font-ui);">
+            <i class="bi bi-trash me-1"></i><%= lang === 'ar' ? 'إفراغ السلة' : 'Clear Cart' %>
+          </button>
+        </form>
+      </div>
+
+      <!-- Order Summary -->
+      <div class="col-lg-4">
+        <div class="neon-panel">
+          <div class="neon-panel-header">
+            <i class="bi bi-receipt me-2"></i>
+            <%= lang === 'ar' ? 'ملخص الطلب' : 'Order Summary' %>
+          </div>
+
+          <div class="d-flex justify-content-between mb-2" style="font-family:var(--font-ui);">
+            <span style="color:var(--text-muted);"><%= lang === 'ar' ? 'المجموع الفرعي' : 'Subtotal' %></span>
+            <span>$<%= subtotal %></span>
+          </div>
+          <div class="d-flex justify-content-between mb-2" style="font-family:var(--font-ui);">
+            <span style="color:var(--text-muted);"><%= lang === 'ar' ? 'الشحن' : 'Shipping' %></span>
+            <span style="color:var(--neon-green);">
+              <%= lang === 'ar' ? 'مجاني' : 'FREE' %>
+            </span>
+          </div>
+
+          <hr class="neon-divider">
+
+          <div class="d-flex justify-content-between mb-4">
+            <span style="font-family:var(--font-display);font-size:1.1rem;">
+              <%= lang === 'ar' ? 'الإجمالي' : 'Total' %>
+            </span>
+            <span class="product-price" style="font-size:1.6rem;">$<%= subtotal %></span>
+          </div>
+
+          <a href="/checkout" class="btn-neon-filled btn w-100 py-2 mb-2">
+            <i class="bi bi-credit-card me-2"></i>
+            <%= lang === 'ar' ? 'إتمام الشراء' : 'Proceed to Checkout' %>
+          </a>
+          <a href="/" class="btn-neon btn w-100 py-2">
+            <span><i class="bi bi-arrow-left me-2"></i><%= lang === 'ar' ? 'متابعة التسوق' : 'Continue Shopping' %></span>
+          </a>
+
+          <!-- Security badge -->
+          <p class="text-center mt-3" style="color:var(--text-muted);font-size:0.78rem;">
+            <i class="bi bi-shield-check me-1" style="color:var(--neon-green);"></i>
+            <%= lang === 'ar' ? 'دفع آمن بتشفير SSL' : 'SSL Encrypted Secure Payment' %>
+          </p>
+        </div>
+      </div>
+
+    </div>
+  <% } %>
+</div>
+

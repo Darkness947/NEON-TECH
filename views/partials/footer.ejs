@@ -1,0 +1,90 @@
+<!-- ============================================================
+     views/partials/footer.ejs
+     ============================================================ -->
+<footer class="neon-footer">
+  <div class="container">
+    <div class="row g-4">
+
+      <!-- Brand Column -->
+      <div class="col-lg-4 col-md-6">
+        <div class="footer-brand mb-3">⚡ NEON TECH</div>
+        <p style="color:var(--text-muted);font-size:0.9rem;line-height:1.8;">
+          <%= lang === 'ar'
+            ? 'متجر الإلكترونيات الرائد – تسوق أحدث اللابتوبات والهواتف الذكية والألعاب وأجهزة الصوت بتجربة نيون فريدة.'
+            : 'The premier electronics destination. Shop the latest laptops, smartphones, gaming peripherals, and audio gear.' %>
+        </p>
+        <div class="d-flex gap-3 mt-3">
+          <a href="#" style="color:var(--neon-cyan);font-size:1.3rem;"><i class="bi bi-twitter-x"></i></a>
+          <a href="#" style="color:var(--neon-purple);font-size:1.3rem;"><i class="bi bi-instagram"></i></a>
+          <a href="#" style="color:var(--neon-cyan);font-size:1.3rem;"><i class="bi bi-youtube"></i></a>
+          <a href="#" style="color:var(--neon-purple);font-size:1.3rem;"><i class="bi bi-discord"></i></a>
+        </div>
+      </div>
+
+      <!-- Shop Links -->
+      <div class="col-lg-2 col-md-6 col-6">
+        <h6 style="font-family:var(--font-display);color:var(--neon-cyan);letter-spacing:2px;font-size:0.85rem;margin-bottom:1rem;">
+          <%= lang === 'ar' ? 'تسوق' : 'SHOP' %>
+        </h6>
+        <ul class="list-unstyled d-flex flex-column gap-2">
+          <li><a href="/?category=Laptops+%26+Computers" class="footer-link">
+            <%= lang === 'ar' ? 'لابتوبات وكمبيوترات' : 'Laptops & Computers' %></a></li>
+          <li><a href="/?category=Smartphones+%26+Tablets" class="footer-link">
+            <%= lang === 'ar' ? 'هواتف وتابلت' : 'Smartphones & Tablets' %></a></li>
+          <li><a href="/?category=Gaming+%26+Peripherals" class="footer-link">
+            <%= lang === 'ar' ? 'ألعاب وإكسسوارات' : 'Gaming & Peripherals' %></a></li>
+          <li><a href="/?category=Audio+%26+Wearables" class="footer-link">
+            <%= lang === 'ar' ? 'صوتيات وأجهزة ذكية' : 'Audio & Wearables' %></a></li>
+        </ul>
+      </div>
+
+      <!-- Account Links -->
+      <div class="col-lg-2 col-md-6 col-6">
+        <h6 style="font-family:var(--font-display);color:var(--neon-purple);letter-spacing:2px;font-size:0.85rem;margin-bottom:1rem;">
+          <%= lang === 'ar' ? 'حسابي' : 'ACCOUNT' %>
+        </h6>
+        <ul class="list-unstyled d-flex flex-column gap-2">
+          <li><a href="/auth/login"  class="footer-link"><%= lang === 'ar' ? 'تسجيل الدخول' : 'Login' %></a></li>
+          <li><a href="/auth/register" class="footer-link"><%= lang === 'ar' ? 'إنشاء حساب' : 'Register' %></a></li>
+          <li><a href="/orders"      class="footer-link"><%= lang === 'ar' ? 'طلباتي' : 'My Orders' %></a></li>
+          <li><a href="/wishlist"    class="footer-link"><%= lang === 'ar' ? 'المفضلة' : 'Wishlist' %></a></li>
+        </ul>
+      </div>
+
+      <!-- Contact -->
+      <div class="col-lg-4 col-md-6">
+        <h6 style="font-family:var(--font-display);color:var(--neon-cyan);letter-spacing:2px;font-size:0.85rem;margin-bottom:1rem;">
+          <%= lang === 'ar' ? 'تواصل معنا' : 'CONTACT' %>
+        </h6>
+        <p style="color:var(--text-muted);font-size:0.875rem;line-height:2;">
+          <i class="bi bi-envelope me-2" style="color:var(--neon-cyan);"></i>support@neontech.com<br>
+          <i class="bi bi-telephone me-2" style="color:var(--neon-purple);"></i>+966 11 000 0000<br>
+          <i class="bi bi-geo-alt me-2" style="color:var(--neon-cyan);"></i>
+            <%= lang === 'ar' ? 'الرياض، المملكة العربية السعودية' : 'Riyadh, Saudi Arabia' %>
+        </p>
+        <!-- Newsletter -->
+        <form class="d-flex gap-2 mt-2" onsubmit="return false;">
+          <input type="email" class="neon-search" style="flex:1;border-radius:6px;"
+            placeholder="<%= lang === 'ar' ? 'بريدك الإلكتروني' : 'Your email' %>">
+          <button class="btn-neon btn py-1 px-3">
+            <i class="bi bi-send"></i>
+          </button>
+        </form>
+      </div>
+
+    </div>
+
+    <hr class="neon-divider mt-4">
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+      <p style="color:var(--text-muted);font-size:0.8rem;margin:0;">
+        © <%= new Date().getFullYear() %> NEON TECH. <%= lang === 'ar' ? 'جميع الحقوق محفوظة.' : 'All rights reserved.' %>
+      </p>
+      <div class="d-flex gap-3" style="color:var(--text-muted);font-size:0.75rem;">
+        <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/visa.svg"       height="22" style="filter:brightness(0) invert(0.6);" alt="Visa">
+        <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/mastercard.svg" height="22" style="filter:brightness(0) invert(0.6);" alt="Mastercard">
+        <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/stripe.svg"     height="22" style="filter:brightness(0) invert(0.6);" alt="Stripe">
+      </div>
+    </div>
+  </div>
+</footer>

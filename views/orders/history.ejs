@@ -1,0 +1,66 @@
+<!-- ============================================================
+     views/orders/history.ejs – Order History
+     ============================================================ -->
+<div class="container py-5">
+  <h1 class="section-title mb-4">
+    <span class="accent"><i class="bi bi-box-seam me-2"></i></span>
+    <%= lang === 'ar' ? 'سجل الطلبات' : 'Order History' %>
+  </h1>
+
+  <% if (orders.length === 0) { %>
+    <div class="neon-panel text-center py-5">
+      <i class="bi bi-inbox" style="font-size:3.5rem;color:var(--text-muted);"></i>
+      <p class="mt-3" style="color:var(--text-muted);">
+        <%= lang === 'ar' ? 'لا توجد طلبات بعد.' : 'No orders yet.' %>
+      </p>
+      <a href="/" class="btn-neon btn mt-2">
+        <span><%= lang === 'ar' ? 'ابدأ التسوق' : 'Start Shopping' %></span>
+      </a>
+    </div>
+  <% } else { %>
+    <div class="neon-panel p-0 overflow-hidden">
+      <table class="neon-table">
+        <thead>
+          <tr>
+            <th><%= lang === 'ar' ? 'رقم الطلب' : 'Order #' %></th>
+            <th><%= lang === 'ar' ? 'التاريخ' : 'Date' %></th>
+            <th><%= lang === 'ar' ? 'الإجمالي' : 'Total' %></th>
+            <th><%= lang === 'ar' ? 'الحالة' : 'Status' %></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% orders.forEach(order => { %>
+            <tr>
+              <td style="font-family:var(--font-display);color:var(--neon-cyan);">#<%= order.id %></td>
+              <td style="color:var(--text-muted);font-size:0.85rem;">
+                <%= new Date(order.created_at).toLocaleDateString(lang === 'ar' ? 'ar-SA' : 'en-US') %>
+              </td>
+              <td class="product-price" style="font-size:1rem;">$<%= Number(order.total).toFixed(2) %></td>
+              <td>
+                <% const statusColors = {
+                  paid:       'var(--neon-green)',
+                  pending:    '#ffae00',
+                  processing: 'var(--neon-cyan)',
+                  shipped:    'var(--neon-purple)',
+                  delivered:  'var(--neon-green)',
+                  cancelled:  'var(--neon-pink)'
+                }; %>
+                <span class="badge-neon"
+                  <%- `style="background:none;color:${statusColors[order.status] || 'var(--text-muted)'};border:1px solid ${statusColors[order.status] || 'var(--border-neon)'};"` %>>
+                  <%= order.status.toUpperCase() %>
+                </span>
+              </td>
+              <td>
+                <a href="/orders/<%= order.id %>" class="btn-neon btn btn-sm py-1">
+                  <span><%= lang === 'ar' ? 'التفاصيل' : 'Details' %></span>
+                </a>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</div>
+

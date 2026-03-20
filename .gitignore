@@ -1,0 +1,19 @@
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Environment variables
+.env
+
+# Logs and scratch files
+error_log.txt
+fix.js
+fix_escapes.js
+verify_ejs.js
+test_run.js
+reports/
+
+# OS generated files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,75 @@
+<!-- ============================================================
+     views/orders/detail.ejs – Order Detail
+     ============================================================ -->
+<div class="container py-5">
+  <a href="/orders" style="color:var(--text-muted);font-family:var(--font-ui);font-size:0.85rem;text-decoration:none;">
+    <i class="bi bi-arrow-left me-2"></i><%= lang === 'ar' ? 'طلباتي' : 'My Orders' %>
+  </a>
+
+  <h1 class="section-title mt-2 mb-4">
+    <%= lang === 'ar' ? 'طلب' : 'Order' %> <span class="accent">#<%= order.id %></span>
+  </h1>
+
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <div class="neon-panel p-0 overflow-hidden">
+        <table class="neon-table">
+          <thead>
+            <tr>
+              <th><%= lang === 'ar' ? 'المنتج' : 'Product' %></th>
+              <th class="text-center"><%= lang === 'ar' ? 'الكمية' : 'Qty' %></th>
+              <th class="text-end"><%= lang === 'ar' ? 'الوحدة' : 'Unit Price' %></th>
+              <th class="text-end"><%= lang === 'ar' ? 'الإجمالي' : 'Total' %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% items.forEach(item => { %>
+              <tr>
+                <td>
+                  <div class="d-flex align-items-center gap-3">
+                    <img src="<%= item.image_path %>"
+                         style="width:55px;height:50px;object-fit:cover;border-radius:6px;
+                                border:1px solid var(--border-neon);"
+                         alt="<%= lang === 'ar' ? item.name_ar : item.name_en %>">
+                    <span style="font-family:var(--font-ui);font-weight:600;">
+                      <%= lang === 'ar' ? item.name_ar : item.name_en %>
+                    </span>
+                  </div>
+                </td>
+                <td class="text-center"><%= item.quantity %></td>
+                <td class="text-end" style="color:var(--text-muted);">$<%= Number(item.unit_price).toFixed(2) %></td>
+                <td class="text-end product-price" style="font-size:0.95rem;">
+                  $<%= (item.unit_price * item.quantity).toFixed(2) %>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="neon-panel">
+        <div class="neon-panel-header">
+          <%= lang === 'ar' ? 'تفاصيل الطلب' : 'Order Info' %>
+        </div>
+        <div class="d-flex justify-content-between mb-2" style="font-family:var(--font-ui);">
+          <span style="color:var(--text-muted);">Status</span>
+          <span style="color:var(--neon-green);text-transform:uppercase;font-weight:700;">
+            <%= order.status %>
+          </span>
+        </div>
+        <div class="d-flex justify-content-between mb-2" style="font-family:var(--font-ui);">
+          <span style="color:var(--text-muted);">Date</span>
+          <span><%= new Date(order.created_at).toLocaleDateString() %></span>
+        </div>
+        <hr class="neon-divider">
+        <div class="d-flex justify-content-between">
+          <span style="font-family:var(--font-display);">Total</span>
+          <span class="product-price" style="font-size:1.4rem;">$<%= Number(order.total).toFixed(2) %></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
