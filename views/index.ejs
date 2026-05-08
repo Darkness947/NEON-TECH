@@ -73,6 +73,15 @@
         <div class="col">
           <div class="product-card card border-0 h-100">
 
+            <!-- Compare Checkbox -->
+            <label class="compare-check-label" title="<%= lang === 'ar' ? 'حدد للمقارنة' : 'Select to compare' %>">
+              <input type="checkbox" class="compare-check" data-product-id="<%= product.id %>"
+                     data-product-name="<%= lang === 'ar' ? product.name_ar : product.name_en %>">
+              <span class="compare-check-box">
+                <i class="bi bi-check-lg"></i>
+              </span>
+            </label>
+
             <!-- Product Image -->
             <a href="/products/<%= product.id %>">
               <div class="overflow-hidden" style="height:220px;">
@@ -144,4 +153,64 @@
     </div>
   <% } %>
 </section>
+
+<!-- ── Floating Compare Bar ───────────────────────────────────── -->
+<div id="compareBar">
+  <div class="container d-flex align-items-center justify-content-between">
+    <div class="d-flex align-items-center gap-3">
+      <i class="bi bi-robot" style="font-size:1.4rem;color:var(--neon-green);"></i>
+      <span id="compareBarText" style="font-family:var(--font-ui);font-weight:600;letter-spacing:1px;">
+        <%= lang === 'ar' ? 'حدد منتجين للمقارنة' : 'Select 2 products to compare' %>
+      </span>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+      <button id="compareClearBtn" class="btn btn-sm" style="color:var(--text-muted);border:1px solid var(--border-neon);border-radius:6px;padding:0.3rem 0.8rem;font-family:var(--font-ui);">
+        <%= lang === 'ar' ? 'مسح' : 'Clear' %>
+      </button>
+      <button id="compareNowBtn" class="btn-neon-filled btn btn-sm" disabled
+              style="padding:0.4rem 1.5rem;font-family:var(--font-ui);font-weight:700;letter-spacing:1px;">
+        <i class="bi bi-robot me-1"></i> <%= lang === 'ar' ? 'قارن الآن' : 'Compare Now' %>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── AI Comparison Modal ────────────────────────────────────── -->
+<div id="compareModal" class="compare-modal-overlay">
+  <div class="compare-modal-content">
+    <button id="compareModalClose" class="compare-modal-close" title="Close">
+      <i class="bi bi-x-lg"></i>
+    </button>
+    <div class="text-center mb-4">
+      <div class="d-inline-flex align-items-center gap-2"
+           style="font-family:var(--font-display);font-size:1.3rem;letter-spacing:3px;color:var(--neon-green);text-transform:uppercase;">
+        <i class="bi bi-robot" style="font-size:1.5rem;"></i>
+        <%= lang === 'ar' ? 'مقارنة الذكاء الاصطناعي' : 'AI Product Comparison' %>
+      </div>
+    </div>
+
+    <!-- Product Header Cards -->
+    <div class="row g-3 mb-4">
+      <div class="col-6">
+        <div class="neon-panel text-center" style="padding:1rem;" id="compareP1Card">
+          <p class="product-category mb-1" id="compareP1Cat"></p>
+          <h5 style="font-family:var(--font-ui);font-weight:700;color:var(--text-primary);font-size:0.95rem;" id="compareP1Name"></h5>
+          <span class="product-price" style="font-size:1.2rem;" id="compareP1Price"></span>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="neon-panel text-center" style="padding:1rem;" id="compareP2Card">
+          <p class="product-category mb-1" id="compareP2Cat"></p>
+          <h5 style="font-family:var(--font-ui);font-weight:700;color:var(--text-primary);font-size:0.95rem;" id="compareP2Name"></h5>
+          <span class="product-price" style="font-size:1.2rem;" id="compareP2Price"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Result -->
+    <div class="neon-panel ai-result-scroll" style="border-color:var(--neon-green);background:rgba(0,255,136,0.04);">
+      <div id="compareResultContent" style="color:var(--text-primary);line-height:1.8;font-size:0.92rem;"></div>
+    </div>
+  </div>
+</div>
 

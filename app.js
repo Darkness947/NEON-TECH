@@ -24,7 +24,7 @@ app.use(helmet({
       scriptSrc:  ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://js.stripe.com"],
       frameSrc:   ["https://js.stripe.com", "https://hooks.stripe.com"],
       imgSrc:     ["'self'", "data:", "https:"],
-      connectSrc: ["'self'", "https://api.stripe.com"],
+      connectSrc: ["'self'", "https://cdn.jsdelivr.net", "https://api.stripe.com", "https://generativelanguage.googleapis.com"],
       formAction: ["'self'", "https://checkout.stripe.com"],
       upgradeInsecureRequests: null
     }
@@ -81,6 +81,7 @@ app.use('/checkout',  require('./routes/checkout'));
 app.use('/orders',    require('./routes/orders'));
 app.use('/wishlist',  require('./routes/wishlist'));
 app.use('/reviews',   require('./routes/reviews'));
+app.use('/ai',        require('./routes/ai'));
 
 // ── 404 Handler ───────────────────────────────────────────────
 app.use((req, res) => {
