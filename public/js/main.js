@@ -33,21 +33,8 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   // ── Star Rating Interaction ───────────────────────────────
-  const stars = document.querySelectorAll('.star-rating label');
-  stars.forEach((star, idx) => {
-    star.addEventListener('mouseover', () => {
-      stars.forEach((s, i) => {
-        s.style.color = i <= idx ? '#ffd700' : 'var(--text-muted)';
-      });
-    });
-    star.addEventListener('mouseout', () => {
-      const checked = document.querySelector('.star-rating input:checked');
-      const checkedIdx = checked ? parseInt(checked.value) - 1 : -1;
-      stars.forEach((s, i) => {
-        s.style.color = i <= checkedIdx ? '#ffd700' : 'var(--text-muted)';
-      });
-    });
-  });
+  // Handled purely by CSS (input:checked ~ label + flex-row-reverse).
+  // No JS needed — the CSS sibling combinator pattern works correctly.
 
   // ── Navbar scroll effect ──────────────────────────────────
   const navbar = document.querySelector('.neon-navbar');
@@ -83,12 +70,16 @@ document.addEventListener('DOMContentLoaded', function () {
       const productId = this.dataset.productId;
       const resultBox = document.getElementById('aiExplainResult');
       const contentEl = document.getElementById('aiExplainContent');
+      const scrollPanel = resultBox.querySelector('.ai-result-scroll');
 
       // Show loading
       resultBox.style.display = 'block';
       contentEl.innerHTML = '<div class="ai-loading"><div class="ai-spinner"></div>Analyzing product with AI...</div>';
       this.disabled = true;
       this.querySelector('span').innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Generating...';
+
+      // Scroll the panel into view
+      resultBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
       try {
         const resp = await fetch('/ai/explain', {
@@ -104,6 +95,13 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       } catch (err) {
         contentEl.innerHTML = '<p style="color:var(--neon-pink);">Failed to reach the AI service. Please try again.</p>';
+      }
+
+      // Scroll panel to top and into view after content loads
+      if (scrollPanel) {
+        scrollPanel.scrollTop = 0;
+        resultBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        trapScroll(scrollPanel);
       }
 
       this.disabled = false;
@@ -176,8 +174,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const resultEl = document.getElementById('compareResultContent');
         resultEl.innerHTML = '<div class="ai-loading"><div class="ai-spinner"></div>Generating AI comparison...</div>';
 
-        // Open modal
+        // Open modal and lock body scroll
         compareModal.classList.add('open');
+        document.body.style.overflow = 'hidden';
 
         try {
           const resp = await fetch('/ai/compare', {
@@ -203,15 +202,28 @@ document.addEventListener('DOMContentLoaded', function () {
         } catch (err) {
           resultEl.innerHTML = '<p style="color:var(--neon-pink);">Failed to reach the AI service. Please try again.</p>';
         }
+
+        // Trap scroll inside the modal result panel
+        const modalScrollPanel = compareModal.querySelector('.ai-result-scroll');
+        if (modalScrollPanel) {
+          modalScrollPanel.scrollTop = 0;
+          trapScroll(modalScrollPanel);
+        }
       });
     }
 
+    // Close modal helpers — restore body scroll
+    function closeCompareModal() {
+      compareModal.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
     if (compareClose) {
-      compareClose.addEventListener('click', () => compareModal.classList.remove('open'));
+      compareClose.addEventListener('click', closeCompareModal);
     }
     if (compareModal) {
       compareModal.addEventListener('click', function (e) {
-        if (e.target === this) this.classList.remove('open');
+        if (e.target === this) closeCompareModal();
       });
     }
   }
@@ -235,6 +247,25 @@ document.addEventListener('DOMContentLoaded', function () {
       .replace(/\n\n/g, '<br/><br/>')
       .replace(/\n/g, '<br/>');
     return html;
+  }
+
+  // ────────────────────────────────────────────────────────────
+  //  Trap scroll inside a scrollable element (prevent chaining)
+  // ────────────────────────────────────────────────────────────
+  function trapScroll(el) {
+    if (!el || el._scrollTrapped) return;
+    el._scrollTrapped = true;
+    el.addEventListener('wheel', function (e) {
+      const maxScroll = this.scrollHeight - this.clientHeight;
+      // Only trap if the element actually has overflow
+      if (maxScroll <= 0) return;
+      const delta = e.deltaY;
+      const atTop = this.scrollTop <= 0 && delta < 0;
+      const atBottom = this.scrollTop >= maxScroll && delta > 0;
+      if (atTop || atBottom) {
+        e.preventDefault();
+      }
+    }, { passive: false });
   }
 
 });

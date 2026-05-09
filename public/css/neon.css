@@ -453,11 +453,16 @@ body::before {
   font-size: 1.6rem;
   color: var(--text-muted);
   cursor: pointer;
-  transition: color var(--transition);
+  transition: color 0.15s ease;
 }
-.star-rating input:checked ~ label,
+/* Checked state: highlight the checked input's label and all labels after it
+   (which are lower-value stars in DOM order, displayed to the LEFT via flex-row-reverse) */
+.star-rating input:checked ~ label { color: #ffd700; }
+/* Hover state: highlight hovered label and all subsequent siblings */
 .star-rating label:hover,
-.star-rating label:hover ~ label { color: #ffd700; }
+.star-rating label:hover ~ label { color: #ffd700 !important; }
+/* Reset all stars when hovering inside the container, then re-highlight via :hover ~ */
+.star-rating:hover label { color: var(--text-muted); }
 
 /* ── Table ────────────────────────────────────────────────── */
 .neon-table {
@@ -619,10 +624,10 @@ body::before {
   -webkit-backdrop-filter: blur(10px);
   z-index: 2000;
   display: none;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   padding: 2rem;
-  overflow-y: auto;
+  overflow: hidden;
 }
 .compare-modal-overlay.open {
   display: flex;
@@ -633,12 +638,19 @@ body::before {
   border-radius: var(--radius);
   max-width: 750px;
   width: 100%;
+  max-height: 90vh;
   padding: 2rem;
   position: relative;
   animation: fadeInUp 0.4s ease;
   box-shadow: 0 0 60px rgba(0,255,136,0.1);
-  margin: auto 0;
-  flex-shrink: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.compare-modal-content::-webkit-scrollbar { width: 8px; }
+.compare-modal-content::-webkit-scrollbar-track { background: rgba(0,255,136,0.05); border-radius: 4px; }
+.compare-modal-content::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--neon-green), var(--neon-cyan));
+  border-radius: 4px;
 }
 .compare-modal-close {
   position: absolute;
@@ -661,8 +673,9 @@ body::before {
 /* ── AI Scrollable Result Panel ──────────────────────────────── */
 .ai-result-scroll {
   max-height: 450px;
-  overflow-y: scroll !important;
+  overflow-y: auto !important;
   scroll-behavior: smooth;
+  overscroll-behavior: contain;
 }
 .ai-result-scroll::-webkit-scrollbar {
   width: 10px;
