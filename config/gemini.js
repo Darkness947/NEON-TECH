@@ -37,7 +37,7 @@ async function askGemini(prompt) {
     contents: [{ parts: [{ text: prompt }] }],
     generationConfig: {
       temperature: 0.7,
-      maxOutputTokens: 1024
+      maxOutputTokens: 4096
     }
   };
 
@@ -84,13 +84,21 @@ async function askGemini(prompt) {
 
         const data = await response.json();
 
+        // Check if response was truncated due to token limit
+        const finishReason = data?.candidates?.[0]?.finishReason;
+        if (finishReason === 'MAX_TOKENS') {
+          console.warn(`[Gemini] Response from ${model} was truncated (MAX_TOKENS). Retrying with next model...`);
+          lastError = new Error('Gemini response truncated due to token limit.');
+          break; // Try next model for a complete response
+        }
+
         // Extract text from the response
         const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
         if (!text) {
           throw new Error('Empty response from Gemini API.');
         }
 
-        console.log(`[Gemini] Success with model: ${model}`);
+        console.log(`[Gemini] Success with model: ${model} (finishReason: ${finishReason})`);
         return text;
 
       } catch (err) {
