@@ -140,10 +140,11 @@ The application will be live at: **[http://localhost:3000](http://localhost:3000
 
 Once the app is running, try the following to ensure everything is set up correctly:
 
-1.  **Login:** Go to the login page and use `admin@neontech.com` with `password123`.
+1.  **Register:** Go to the register page and register a new user.
 2.  **AI Explain:** Open any product page and click the **"Explain this product"** button. This tests your Gemini API connection.
-3.  **Checkout:** Add an item to your cart and proceed to checkout. This tests your Stripe integration. (Use card number `4242 4242 4242 4242` for testing).
-4.  **Language Toggle:** Switch between English and Arabic at the top right to test the RTL/Bilingual support.
+3.  **AI Compare:** Select any two products and click the **"Compare"** button. This tests your Gemini API connection.
+4.  **Checkout:** Add an item to your cart and proceed to checkout. This tests your Stripe integration. (Use card number `4242 4242 4242 4242` for testing).
+5.  **Language Toggle:** Switch between English and Arabic at the top right to test the RTL/Bilingual support.
 
 ---
 
