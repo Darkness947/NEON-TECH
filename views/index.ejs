@@ -17,9 +17,11 @@
     <a href="#products" class="btn-neon btn me-2 btn-lg">
       <span><i class="bi bi-grid-3x3-gap me-2"></i><%= lang === 'ar' ? 'تسوق الآن' : 'Shop Now' %></span>
     </a>
+    <% if (!user) { %>
     <a href="/auth/register" class="btn btn-outline-light btn-lg ms-2">
       <span><%= lang === 'ar' ? 'إنشاء حساب' : 'Create Account' %></span>
     </a>
+    <% } %>
   </div>
 </section>
 
